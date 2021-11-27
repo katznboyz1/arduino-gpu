@@ -6,13 +6,14 @@
 */
 
 #include <Arduino.h>
+#include <avr/pgmspace.h>
 
 using namespace std;
 
 struct VGA_400x300 {
-    const byte PIN_RED = 2;
-    const byte PIN_GREEN = 7;
-    const byte PIN_BLUE = 4;
+    const byte PIN_RED = A0;
+    const byte PIN_GREEN = A1;
+    const byte PIN_BLUE = A2;
 
     const byte PIN_HORIZONTAL_SYNC = 9;
     const byte PIN_VERTICAL_SYNC = 6;
@@ -33,6 +34,7 @@ struct VGA_400x300 {
 };
 
 VGA_400x300 VGAController;
+volatile byte *vga_buffer = new byte[VGAController.OUTPUT_RESOLUTION[0] * VGAController.OUTPUT_RESOLUTION[1]];
 
 void setup() {
 
@@ -44,34 +46,40 @@ void setup() {
     pinMode(VGAController.PIN_HORIZONTAL_SYNC, OUTPUT);
     pinMode(VGAController.PIN_VERTICAL_SYNC, OUTPUT);
 
-    digitalWrite(VGAController.PIN_RED, LOW);
-    digitalWrite(VGAController.PIN_GREEN, LOW);
-    digitalWrite(VGAController.PIN_BLUE, LOW);
-    digitalWrite(VGAController.PIN_HORIZONTAL_SYNC, LOW);
-    digitalWrite(VGAController.PIN_VERTICAL_SYNC, LOW);
-
     VGAController.is_initialized = true;
 }
 
 void loop() {
 
-    digitalWrite(VGAController.PIN_HORIZONTAL_SYNC, HIGH);
+    register byte r, g, b = 0;
 
-    for (register int i = 0; i < VGAController.OUTPUT_RESOLUTION[0]; i++) {
+    VGAController.y++;
+    if (VGAController.y > VGAController.OUTPUT_RESOLUTION_TOTAL[1]) VGAController.y = 0;
 
-        // these numbers mean nothing, I just chose them randomly to test
-        digitalWrite(VGAController.PIN_RED, HIGH);
-        digitalWrite(VGAController.PIN_GREEN, HIGH);
-        digitalWrite(VGAController.PIN_BLUE, HIGH);
-        delayMicroseconds(8);
-        digitalWrite(VGAController.PIN_RED, LOW);
-        digitalWrite(VGAController.PIN_GREEN, LOW);
-        digitalWrite(VGAController.PIN_BLUE, LOW);
-        delayMicroseconds(8);
-        digitalWrite(VGAController.PIN_HORIZONTAL_SYNC, HIGH);
-        delayMicroseconds(4);
-        digitalWrite(VGAController.PIN_HORIZONTAL_SYNC, LOW);
-    }
-
-    digitalWrite(VGAController.PIN_HORIZONTAL_SYNC, HIGH);
+    // output 8 pixels 50 times (8*50=400=width)
+    // honestly I have no idea what this does, I'll have to research more into assembly
+    asm volatile(
+        ".rept 50\n"
+        "   ld r16, Z+\n"
+        "   out %[port], r16\n"
+        "   lsl r16\n"
+        "   out %[port], r16\n"
+        "   lsl r16\n"
+        "   out %[port], r16\n"
+        "   lsl r16\n"
+        "   out %[port], r16\n"
+        "   lsl r16\n"
+        "   out %[port], r16\n"
+        "   lsl r16\n"
+        "   out %[port], r16\n"
+        "   lsl r16\n"
+        "   out %[port], r16\n"
+        "   lsl r16\n"
+        "   out %[port], r16\n"
+        ".endr"
+        :
+        : [port] "I" (_SFR_IO_ADDR(PORTD)),
+        "z" "I" ((byte*)vga_buffer + VGAController.y * 50)
+        : "r16", "memory"
+    );
 }
