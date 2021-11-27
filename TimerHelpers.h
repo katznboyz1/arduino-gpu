@@ -26,11 +26,7 @@ See: http://www.gammon.com.au/forum/?id=11504
 #ifndef _TimerHelpers_h
 #define _TimerHelpers_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
-  #include "Arduino.h"
-#else
-  #include "WProgram.h"
-#endif
+#include <Arduino.h>
 
 /* ---------------------------------------------------------------
  Timer 0 setup
