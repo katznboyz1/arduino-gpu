@@ -5,7 +5,6 @@
 */
 
 #include <Arduino.h>
-#include "TimerHelpers.h"
 
 using namespace std;
 
