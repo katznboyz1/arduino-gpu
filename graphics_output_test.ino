@@ -7,6 +7,7 @@
 
 #include <Arduino.h>
 #include <avr/pgmspace.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -15,8 +16,8 @@ struct VGA_400x300 {
     const byte PIN_GREEN = A1;
     const byte PIN_BLUE = A2;
 
-    const byte PIN_HORIZONTAL_SYNC = 9;
-    const byte PIN_VERTICAL_SYNC = 6;
+    const byte PIN_HORIZONTAL_SYNC = 3;
+    const byte PIN_VERTICAL_SYNC = 9;
 
     // x, y, hz
     const int16_t OUTPUT_RESOLUTION[3] = {400, 300, 60};
@@ -40,16 +41,32 @@ void setup() {
 
     Serial.begin(9600);
 
+    TIMSK0 = 0;
+    TCCR0A = 0;
+    TCCR0B = (1 << CS00);
+    OCR0A = 0;
+    OCR0B = 0;
+    TCNT0 = 0;
+
     pinMode(VGAController.PIN_RED, OUTPUT);
     pinMode(VGAController.PIN_GREEN, OUTPUT);
     pinMode(VGAController.PIN_BLUE, OUTPUT);
     pinMode(VGAController.PIN_HORIZONTAL_SYNC, OUTPUT);
     pinMode(VGAController.PIN_VERTICAL_SYNC, OUTPUT);
 
+    TCCR2A = bit(WGM20) | bit(WGM21) | bit(COM2B1); //pin3=COM2B1
+    TCCR2B = bit(WGM22) | bit(CS21); //8 prescaler
+    OCR2A = 63; // 32 / 0.5 uS=64 (minus one)
+    OCR2B = 7; // 4 / 0.5 uS=8 (minus one)
+    TIFR2 = bit(OCF2B); // clear Compare Match B flag
+    TIMSK2 = bit(OCIE2B); // enable Compare Match B interrupt
+
     VGAController.is_initialized = true;
+
+    sei();
 }
 
-void loop() {
+ISR(TIMER2_COMPB_vect) {
 
     register byte r, g, b = 0;
 
@@ -83,3 +100,5 @@ void loop() {
         : "r16", "memory"
     );
 }
+
+void loop() {}
