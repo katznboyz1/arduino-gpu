@@ -1,4 +1,4 @@
-#include "VGAX.h"
+#include "lib/VGAX.h"
 
 VGAX vga;
 
