@@ -1,3 +1,8 @@
+/*
+    I got my instructions on how to make the GPU from this video: https://youtu.be/l7rce6IQDWs
+    Signal timings are from http://tinyvga.com/vga-timing (specifically http://tinyvga.com/vga-timing/640x480@60Hz)
+*/
+
 #include <Arduino.h>
 
 using namespace std;
