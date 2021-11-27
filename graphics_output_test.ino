@@ -19,13 +19,11 @@ struct VGA {
     // x, y, hz
     const int OUTPUT_RESOLUTION[3] = {200, 200, 60};
 
-    const long double OUTPUT_PERIOD = (1 / 60);
+    // min, max
+    const int OUTPUT_MIN_MAX_ANALOG_SIGNAL = 255;
 
-    const int MAX_MIN_ANALOG_SIGNAL[2] = {0, 255};
-
-    // must be one bit, so I'm using a boolean for readability
-    const bool VGA_HORIZONTAL_SYNC;
-    const bool VGA_VERTICAL_SYNC;
+    // microseconds
+    const long double OUTPUT_PERIOD = (1 / 60) * 1e6;
 };
 
 VGA VGAController;
@@ -43,10 +41,7 @@ void setup() {
 
 void loop() {
 
-    analogWrite(VGAController.PIN_RED, VGAController.MAX_MIN_ANALOG_SIGNAL[1]);
-    analogWrite(VGAController.PIN_GREEN, VGAController.MAX_MIN_ANALOG_SIGNAL[1]);
-    analogWrite(VGAController.PIN_BLUE, VGAController.MAX_MIN_ANALOG_SIGNAL[1]);
-
-    analogWrite(VGAController.PIN_HORIZONTAL_SYNC, VGAController.VGA_HORIZONTAL_SYNC);
-    analogWrite(VGAController.PIN_VERTICAL_SYNC, VGAController.VGA_VERTICAL_SYNC);
+    analogWrite(VGAController.PIN_RED, VGAController.OUTPUT_MIN_MAX_ANALOG_SIGNAL);
+    analogWrite(VGAController.PIN_GREEN, VGAController.OUTPUT_MIN_MAX_ANALOG_SIGNAL);
+    analogWrite(VGAController.PIN_BLUE, VGAController.OUTPUT_MIN_MAX_ANALOG_SIGNAL);
 }
