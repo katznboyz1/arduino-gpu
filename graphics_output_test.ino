@@ -1,6 +1,6 @@
 /*
     I got my instructions on how to make the GPU from this video: https://youtu.be/l7rce6IQDWs
-    Signal timings are from http://tinyvga.com/vga-timing (specifically http://tinyvga.com/vga-timing/640x480@60Hz)
+    Signal timings are from http://tinyvga.com/vga-timing
 */
 
 #include <Arduino.h>
@@ -17,13 +17,14 @@ struct VGA {
     const int PIN_VERTICAL_SYNC = 12;
 
     // x, y, hz
-    const int OUTPUT_RESOLUTION[3] = {200, 200, 60};
+    const int OUTPUT_RESOLUTION[3] = {160, 120, 60};
 
     // min, max
     const int OUTPUT_MIN_MAX_ANALOG_SIGNAL = 255;
 
     // microseconds
-    const long double OUTPUT_PERIOD = (1 / 60) * 1e6;
+    const double OUTPUT_PERIOD_HORIZONTAL = (1 / 60) * 1e6;
+    const double OUTPUT_PERIOD_VERTICAL = (1 / 60) * 1e6;
 };
 
 VGA VGAController;
