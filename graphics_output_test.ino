@@ -5,7 +5,6 @@
 */
 
 #include <Arduino.h>
-#include <Wire.h>
 
 using namespace std;
 
@@ -18,8 +17,8 @@ struct VGA_400x300 {
     const byte PIN_VERTICAL_SYNC = 12;
 
     // x, y, hz
-    const int OUTPUT_RESOLUTION[3] = {400, 300, 60};
-    const int OUTPUT_RESOLUTION_TOTAL[2] = {496, 324};
+    const int16_t OUTPUT_RESOLUTION[3] = {400, 300, 60};
+    const int16_t OUTPUT_RESOLUTION_TOTAL[2] = {496, 324};
 
     // min, max
     const int OUTPUT_MIN_MAX_ANALOG_SIGNAL = 255;
@@ -27,7 +26,7 @@ struct VGA_400x300 {
     const double VERTICAL_SYNC_kHz = 19.153;
     const double VERTICAL_SYNC_Hz = 59.115;
 
-    volatile int x, y = 0;
+    volatile int16_t x, y = 0;
     volatile byte r = 0;
     volatile byte g = 1;
     volatile byte b = 0;
@@ -47,7 +46,7 @@ void vga_sleep() {
 void vga_scanline() {
 
     if (VGAController.is_initialized) {
-        
+
     }
 }
 
