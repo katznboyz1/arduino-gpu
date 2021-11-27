@@ -4,7 +4,7 @@
 // To save rendering time, they are ordered by line (ie. line 1, line 2) and then 
 //  indexed by character.
 
-byte screen_font [8] [256] PROGMEM = {
+const byte screen_font [8] [256] PROGMEM = {
 // Row 1
  { 
   0xFF, 0xC0, 0xC0, 0xC9, 0xF7, 0xE3, 0xF7, 0xFF, 0x80, 0xFF, 0x80, 0xF8, 0xE1, 0xE0, 0xC0, 0xB3, 
