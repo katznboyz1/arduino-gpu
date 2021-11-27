@@ -1,6 +1,0 @@
-{
-    "board": "arduino:avr:uno",
-    "port": "COM4",
-    "programmer": "arduino:arduinoisp",
-    "sketch": "graphics_output_test.ino"
-}
