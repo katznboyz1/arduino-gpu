@@ -27,27 +27,33 @@ struct VGA_400x300 {
     const double VERTICAL_SYNC_Hz = 59.115;
 
     volatile int16_t x, y = 0;
-    volatile byte r = 0;
-    volatile byte g = 1;
-    volatile byte b = 0;
 
     bool is_initialized = false;
 };
 
 VGA_400x300 VGAController;
 
+// does nothing, currently
 void vga_sleep() {
 
     if (VGAController.is_initialized) {
 
-    }
+    } else return;
 }
 
+// currently doesnt scan lines, it only outputs individual pixels
 void vga_scanline() {
+
+    // r, g, b
+    register byte pixel_value[3] = {1, 1, 1};
 
     if (VGAController.is_initialized) {
 
-    }
+        digitalWrite(VGAController.PIN_RED, VGAController.OUTPUT_MIN_MAX_ANALOG_SIGNAL * pixel_value[0]);
+        digitalWrite(VGAController.PIN_GREEN, VGAController.OUTPUT_MIN_MAX_ANALOG_SIGNAL * pixel_value[1]);
+        digitalWrite(VGAController.PIN_BLUE, VGAController.OUTPUT_MIN_MAX_ANALOG_SIGNAL * pixel_value[2]);
+
+    } else return;
 }
 
 void setup() {
