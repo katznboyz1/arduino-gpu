@@ -2,6 +2,7 @@
     I got my instructions on how to make the GPU from this video: https://youtu.be/l7rce6IQDWs
     Signal timings are from http://tinyvga.com/vga-timing
     https://tomverbeure.github.io/video_timings_calculator (400x300)
+    https://forum.arduino.cc/t/turn-your-uno-into-a-vga-output-device/99969/63?page=4
 */
 
 #include <Arduino.h>
@@ -33,6 +34,12 @@ struct VGA_400x300 {
 
 VGA_400x300 VGAController;
 
+ISR(TIMER2_OVF_vect) {
+
+    sei();
+    __asm__("sleep \n");
+}
+
 void setup() {
 
     Serial.begin(9600);
@@ -43,6 +50,9 @@ void setup() {
     pinMode(VGAController.PIN_HORIZONTAL_SYNC, OUTPUT);
     pinMode(VGAController.PIN_VERTICAL_SYNC, OUTPUT);
 
+    digitalWrite(VGAController.PIN_RED, LOW);
+    digitalWrite(VGAController.PIN_GREEN, LOW);
+    digitalWrite(VGAController.PIN_BLUE, LOW);
     digitalWrite(VGAController.PIN_HORIZONTAL_SYNC, LOW);
     digitalWrite(VGAController.PIN_VERTICAL_SYNC, LOW);
 
