@@ -10,12 +10,12 @@
 using namespace std;
 
 struct VGA_400x300 {
-    const byte PIN_RED = 8;
-    const byte PIN_GREEN = 9;
-    const byte PIN_BLUE = 10;
+    const byte PIN_RED = 2;
+    const byte PIN_GREEN = 7;
+    const byte PIN_BLUE = 4;
 
-    const byte PIN_HORIZONTAL_SYNC = 11;
-    const byte PIN_VERTICAL_SYNC = 12;
+    const byte PIN_HORIZONTAL_SYNC = 9;
+    const byte PIN_VERTICAL_SYNC = 6;
 
     // x, y, hz
     const int16_t OUTPUT_RESOLUTION[3] = {400, 300, 60};
@@ -33,12 +33,6 @@ struct VGA_400x300 {
 };
 
 VGA_400x300 VGAController;
-
-ISR(TIMER2_OVF_vect) {
-
-    sei();
-    __asm__("sleep \n");
-}
 
 void setup() {
 
@@ -69,11 +63,11 @@ void loop() {
         digitalWrite(VGAController.PIN_RED, HIGH);
         digitalWrite(VGAController.PIN_GREEN, HIGH);
         digitalWrite(VGAController.PIN_BLUE, HIGH);
-        delayMicroseconds(10);
+        delayMicroseconds(8);
         digitalWrite(VGAController.PIN_RED, LOW);
         digitalWrite(VGAController.PIN_GREEN, LOW);
         digitalWrite(VGAController.PIN_BLUE, LOW);
-        delayMicroseconds(10);
+        delayMicroseconds(8);
         digitalWrite(VGAController.PIN_HORIZONTAL_SYNC, HIGH);
         delayMicroseconds(4);
         digitalWrite(VGAController.PIN_HORIZONTAL_SYNC, LOW);
