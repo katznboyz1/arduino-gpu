@@ -33,29 +33,6 @@ struct VGA_400x300 {
 
 VGA_400x300 VGAController;
 
-// does nothing, currently
-void vga_sleep() {
-
-    if (VGAController.is_initialized) {
-
-    } else return;
-}
-
-// currently doesnt scan lines, it only outputs individual pixels
-void vga_scanline() {
-
-    // r, g, b
-    register byte pixel_value[3] = {1, 1, 1};
-
-    if (VGAController.is_initialized) {
-
-        digitalWrite(VGAController.PIN_RED, VGAController.OUTPUT_MIN_MAX_ANALOG_SIGNAL * pixel_value[0]);
-        digitalWrite(VGAController.PIN_GREEN, VGAController.OUTPUT_MIN_MAX_ANALOG_SIGNAL * pixel_value[1]);
-        digitalWrite(VGAController.PIN_BLUE, VGAController.OUTPUT_MIN_MAX_ANALOG_SIGNAL * pixel_value[2]);
-
-    } else return;
-}
-
 void setup() {
 
     Serial.begin(9600);
@@ -66,11 +43,31 @@ void setup() {
     pinMode(VGAController.PIN_HORIZONTAL_SYNC, OUTPUT);
     pinMode(VGAController.PIN_VERTICAL_SYNC, OUTPUT);
 
+    digitalWrite(VGAController.PIN_HORIZONTAL_SYNC, LOW);
+    digitalWrite(VGAController.PIN_VERTICAL_SYNC, LOW);
+
     VGAController.is_initialized = true;
 }
 
 void loop() {
 
-    vga_sleep();
-    vga_scanline();
+    digitalWrite(VGAController.PIN_HORIZONTAL_SYNC, HIGH);
+
+    for (register int i = 0; i < VGAController.OUTPUT_RESOLUTION[0]; i++) {
+
+        // these numbers mean nothing, I just chose them randomly to test
+        digitalWrite(VGAController.PIN_RED, HIGH);
+        digitalWrite(VGAController.PIN_GREEN, HIGH);
+        digitalWrite(VGAController.PIN_BLUE, HIGH);
+        delayMicroseconds(10);
+        digitalWrite(VGAController.PIN_RED, LOW);
+        digitalWrite(VGAController.PIN_GREEN, LOW);
+        digitalWrite(VGAController.PIN_BLUE, LOW);
+        delayMicroseconds(10);
+        digitalWrite(VGAController.PIN_HORIZONTAL_SYNC, HIGH);
+        delayMicroseconds(4);
+        digitalWrite(VGAController.PIN_HORIZONTAL_SYNC, LOW);
+    }
+
+    digitalWrite(VGAController.PIN_HORIZONTAL_SYNC, HIGH);
 }
